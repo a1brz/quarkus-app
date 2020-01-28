@@ -1,0 +1,40 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Download GraalVM
+        run: |
+          curl https://github.com/oracle/graal/releases/download/vm-19.2.1/graalvm-ce-linux-amd64-19.2.1.tar.gz -O -J -L
+          mkdir .graalvm
+          tar xfz graalvm-ce-linux-amd64-19.2.1.tar.gz --strip 1 -C .graalvm
+      - name: Install native-image
+        run: .graalvm/bin/gu install native-image
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build app
+        run: ./mvnw package -Pnative -DskipTests=true --quiet
+        env:
+          GRAALVM_HOME: .graalvm
+      - name: Install Docker
+        run: sudo apt-get install docker
+      - name: Login to Github Packages
+        run: docker login docker.pkg.github.com --username a1brz -p ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker image with OpenJDK HotSpot
+        run: docker build -f src/main/docker/Dockerfile.jvm -t docker.pkg.github.com/$GITHUB_REPOSITORY/quarkus-app-openjdk:latest .
+      - name: Build Docker image with GraalVM
+        run: docker build -f src/main/docker/Dockerfile.native -t docker.pkg.github.com/$GITHUB_REPOSITORY/quarkus-app-graalvm:latest .
+      - name: Push Docker images into Github Packages
+        run: |
+          docker push docker.pkg.github.com/$GITHUB_REPOSITORY/quarkus-app-openjdk
+          docker push docker.pkg.github.com/$GITHUB_REPOSITORY/quarkus-app-graalvm
