@@ -1,8 +1,8 @@
 # Java application based on [Quarkus](https://quarkus.io) framework
  - [GitHub Actions](https://github.com/features/actions) as a CI/CD
- - [GitHub Packages](https://github.com/features/packages) for storing Docker images
- - [Kubernetes](https://kubernetes.io) as container management tool
- - [AWS EKS](https://aws.amazon.com/eks/) as managed Kubernetes service
+ - [GitHub Packages](https://github.com/features/packages) as a Docker images storage
+ - [Kubernetes](https://kubernetes.io) as a container management tool
+ - [AWS EKS](https://aws.amazon.com/eks/) as a managed Kubernetes service
  - GraalVM and HotSpot implementation available
  - Reactive RESTful Web Service
 
