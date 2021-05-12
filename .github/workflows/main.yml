@@ -26,10 +26,12 @@ jobs:
         run: ./mvnw package -Pnative -DskipTests=true --quiet
         env:
           GRAALVM_HOME: .graalvm
-      - name: Install Docker
-        run: sudo apt-get install docker
-      - name: Login to Github Packages
-        run: docker login docker.pkg.github.com --username a1brz -p ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker image with OpenJDK HotSpot
         run: docker build -f src/main/docker/Dockerfile.jvm -t docker.pkg.github.com/$GITHUB_REPOSITORY/quarkus-app-openjdk:latest .
       - name: Build Docker image with GraalVM
