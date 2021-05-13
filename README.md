@@ -14,7 +14,7 @@
 #### Run app locally:
 ```bash
 ./mvnw package
-java -jar target/quarkus-app-runner.jar
+java -jar target/quarkus-app/quarkus-run.jar
 ```
 
 #### Run app locally with hot-reload:
@@ -31,14 +31,14 @@ docker run -i --rm -p 8080:8080 a1brz/quarkus-app
 
 #### Run app in Docker container with GraalVM:
 ```bash
-./mvnw package -Pnative -Dnative-image.docker-build=true
+./mvnw package -Pnative -Dquarkus.native.container-build=true
 docker build -f src/main/docker/Dockerfile.native -t a1brz/quarkus-app .
 docker run -i --rm -p 8080:8080 a1brz/quarkus-app
 ```
 
 #### Push Docker image into [GitHub Packages](https://github.com/features/packages):
 ```bash
-./mvnw package -Pnative -Dnative-image.docker-build=true
+./mvnw package -Pnative -Dquarkus.native.container-build=true
 docker build -f src/main/docker/Dockerfile.native -t a1brz/quarkus-app .
 docker login docker.pkg.github.com -u enter-github-username -p enter-personal-access-token
 docker tag IMAGE_ID docker.pkg.github.com/a1brz/quarkus-app/quarkus-app:latest
