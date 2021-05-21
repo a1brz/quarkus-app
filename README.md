@@ -5,6 +5,7 @@
  - [AWS EKS](https://aws.amazon.com/eks/) as a managed Kubernetes service
  - GraalVM and HotSpot implementation available
  - Reactive RESTful Web Service
+ - Java 11
 
 ![](https://github.com/a1brz/quarkus-app/workflows/Build/badge.svg)
 
